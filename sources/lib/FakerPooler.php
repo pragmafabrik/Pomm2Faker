@@ -9,8 +9,7 @@
  */
 namespace PommProject\Faker;
 
-use PommProject\Foundation\Client\ClientPoolerTrait;
-use PommProject\Foundation\Client\ClientPoolerInterface;
+use PommProject\Foundation\Client\ClientPooler;
 
 use Faker\Generator;
 
@@ -25,10 +24,8 @@ use Faker\Generator;
  * @license X11 {@link http://opensource.org/licenses/mit-license.php}
  * @see ClientPoolerInterface
  */
-class FakerPooler implements ClientPoolerInterface
+class FakerPooler extends ClientPooler
 {
-    use ClientPoolerTrait;
-
     protected $generator;
 
     /**
@@ -56,18 +53,30 @@ class FakerPooler implements ClientPoolerInterface
     }
 
     /**
-     * createClient
+     * getClient
      *
      * @see ClientPoolerTrait
      */
-    public function createClient($identifier)
+    public function getClient($identifier)
     {
         $result = str_getcsv($identifier, '.');
 
         if (count($result) === 1) {
-            return new FakerClient($this->generator, $result[0]);
-        } else {
-            return new FakerClient($this->generator, $result[1], $result[0]);
+            $identifier = sprintf("public.%s", $identifier);
         }
+
+        return parent::getClient($identifier);
+    }
+
+    /**
+     * createClient
+     *
+     * @see ClientPoolerTrait
+     */
+    protected function createClient($identifier)
+    {
+        $result = str_getcsv($identifier, '.');
+
+        return new FakerClient($this->generator, $result[1], $result[0]);
     }
 }

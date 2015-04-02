@@ -110,6 +110,7 @@ class FakerClient extends Client
 
         for ($i = 0; $i < $count; $i++) {
             $row = [];
+
             foreach ($this->row_definition->getDefinition() as $name => $formatter) {
                 $row[$name] = $this->generator->format(
                     $formatter->formatter, $formatter->options
@@ -128,30 +129,46 @@ class FakerClient extends Client
      * Save records in the database.
      *
      * @access public
-     * @param  array        $rows
-     * @return FakerClient  $this
+     * @param  int          $count number of lines to be inserted.
+     * @return array        $rows
      */
-    public function save(array $rows)
+    public function save($count = 1)
     {
-        $sql = 'insert into :relation (:fields) values :values';
-
-        $sql = strtr($sql,
+        $sql = strtr(
+            'insert into :relation (:fields) values (:types) returning *',
             [
                 ':relation' => sprintf("%s.%s", $this->schema, $this->table),
                 ':fields'   => join(', ', array_keys($this->row_definition->getDefinition())),
-                ':values'   => join(', ',
-                    array_map($rows, function($val) { return sprintf("(%s)", join(', ', array_values($val))); })
+                ':types'   => join(', ',
+                    array_map(function($val) { return sprintf("\$*::%s", $val); }, $this->row_definition->getTypes())
                 ),
             ]
         );
 
-        $this
+        $manager = $this
             ->getSession()
-            ->getConnection()
-            ->executeAnonymousQuery($sql)
+            ->getClientUsingPooler('query_manager', '\PommProject\Foundation\PreparedQuery\PreparedQueryManager')
             ;
+        $rows = [];
 
-        return $this;
+        foreach ($this->generate($count) as $row) {
+            $rows[] = $manager->query($sql, $row)->get(0);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * getRowDefinition
+     *
+     * Retur the row definition.
+     *
+     * @access public
+     * @return RowDefinition
+     */
+    public function getRowDefinition()
+    {
+        return $this->row_definition;
     }
 
     /**

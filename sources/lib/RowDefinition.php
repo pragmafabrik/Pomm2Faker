@@ -24,6 +24,7 @@ use PommProject\Faker\Formatter;
 class RowDefinition
 {
     protected $definition = [];
+    protected $types;
 
     /**
      * __construct
@@ -38,6 +39,8 @@ class RowDefinition
      */
     public function __construct(array $definition = [])
     {
+        $this->types = $definition;
+
         foreach ($definition as $name => $type) {
             $this->setDefinition($name, $this->guessFormatter($type));
         }
@@ -58,6 +61,21 @@ class RowDefinition
         $this->definition[$name] = $formatter;
 
         return $this;
+    }
+
+    /**
+     * setFormatterType
+     *
+     * Shortcut to add a new formetter in the definition.
+     *
+     * @access public
+     * @param  string $name
+     * @param  string $type
+     * @return $this
+     */
+    public function setFormatterType($name, $type, array $options = [])
+    {
+        return $this->setDefinition($name, new Formatter($type, $options));
     }
 
     /**
@@ -101,6 +119,19 @@ class RowDefinition
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * getTypes
+     *
+     * Return the row types;
+     *
+     * @access public
+     * @return array
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 
     /**
