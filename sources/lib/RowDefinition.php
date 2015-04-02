@@ -10,6 +10,7 @@
 namespace PommProject\Faker;
 
 use PommProject\Faker\Formatter;
+use PommProject\Faker\Exception\FakerException as PommFakerException;
 
 /**
  * RowDefinition
@@ -34,14 +35,14 @@ class RowDefinition
      * be overrided after.
      *
      * @access public
-     * @param  array $definition
+     * @param  array $types
      * @return null
      */
-    public function __construct(array $definition = [])
+    public function __construct(array $types)
     {
-        $this->types = $definition;
+        $this->types = $types;
 
-        foreach ($definition as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->setDefinition($name, $this->guessFormatter($type));
         }
     }
@@ -58,7 +59,7 @@ class RowDefinition
      */
     public function setDefinition($name, Formatter $formatter)
     {
-        $this->definition[$name] = $formatter;
+        $this->checkField($name)->definition[$name] = $formatter;
 
         return $this;
     }
@@ -89,7 +90,8 @@ class RowDefinition
      */
     public function unsetDefinition($name)
     {
-        unset($this->definition[$name]);
+        unset($this->checkField($name)->definition[$name]);
+        unset($this->types[$name]);
 
         return $this;
     }
@@ -105,7 +107,7 @@ class RowDefinition
      */
     public function definitionExists($name)
     {
-        return (bool) isset($this->definition[$name]);
+        return (bool) isset($this->types[$name]) || $this->types[$name] !== null;
     }
 
     /**
@@ -170,5 +172,29 @@ class RowDefinition
         default:
             return new Formatter($type);
         }
+    }
+
+    /**
+     * checkField
+     *
+     * Throw an exception if the field does not exist.
+     *
+     * @access private
+     * @param  string           $name
+     * @throws FakerException
+     * @return RowDefinition    $this
+     */
+    private function checkField($name)
+    {
+        if ($this->definitionExists($name)) {
+            return $this;
+        }
+
+        throw new PommFakerException(
+            sprintf(
+                "No such field '%s'.",
+                $name
+            )
+        );
     }
 }
