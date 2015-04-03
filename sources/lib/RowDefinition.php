@@ -9,8 +9,8 @@
  */
 namespace PommProject\Faker;
 
-use PommProject\Faker\Formatter;
 use PommProject\Faker\Exception\FakerException as PommFakerException;
+use Faker\Generator;
 
 /**
  * RowDefinition
@@ -41,25 +41,35 @@ class RowDefinition
     public function __construct(array $types)
     {
         $this->types = $types;
+        $this->flushDefinition();
+    }
 
-        foreach ($types as $name => $type) {
-            $this->setDefinition($name, $this->guessFormatter($type));
-        }
+    /**
+     * flushDefinition
+     *
+     * Flush definition
+     *
+     * @access public
+     * @return RowDefinition    $this
+     */
+    public function flushDefinition()
+    {
+        $this->definition = array_fill_keys(array_keys($this->types), null);
     }
 
     /**
      * setDefinition
      *
-     * Set a definition.
+     * Set a definition. A definition can be either a scalar or a callable.
      *
      * @access public
-     * @param  string           $name
-     * @param  Formatter        $formatter
-     * @return RowDefinition    $this
+     * @param  string               $name
+     * @param  mixed                $definition
+     * @return RowDefinition        $this
      */
-    public function setDefinition($name, Formatter $formatter)
+    public function setDefinition($name, $definition)
     {
-        $this->checkField($name)->definition[$name] = $formatter;
+        $this->checkField($name)->definition[$name] = $definition;
 
         return $this;
     }
@@ -67,7 +77,7 @@ class RowDefinition
     /**
      * setFormatterType
      *
-     * Shortcut to add a new formetter in the definition.
+     * Shortcut to add a new formatter in the definition.
      *
      * @access public
      * @param  string $name
@@ -76,7 +86,9 @@ class RowDefinition
      */
     public function setFormatterType($name, $type, array $options = [])
     {
-        return $this->setDefinition($name, new Formatter($type, $options));
+        return $this->setDefinition($name, function (Generator $generator) use ($type, $options) {
+            return $generator->format($type, $options);
+        });
     }
 
     /**
@@ -90,8 +102,7 @@ class RowDefinition
      */
     public function unsetDefinition($name)
     {
-        unset($this->checkField($name)->definition[$name]);
-        unset($this->types[$name]);
+        unset($this->checkDefinition($name)->definition[$name]);
 
         return $this;
     }
@@ -107,7 +118,7 @@ class RowDefinition
      */
     public function definitionExists($name)
     {
-        return (bool) isset($this->types[$name]) || $this->types[$name] !== null;
+        return (bool) isset($this->definition[$name]) || array_key_exists($name, $this->definition);
     }
 
     /**
@@ -137,45 +148,7 @@ class RowDefinition
     }
 
     /**
-     * guessFormatter
-     *
-     * Guess formatter to use from the given postgres type.
-     *
-     * @access protected
-     * @param  string $type
-     * @return Formatter
-     */
-    protected function guessFormatter($type)
-    {
-        switch ($type) {
-        case 'charcter varying':
-            // no break
-        case 'varchar':
-            return new Formatter('sentence');
-        case 'timestamp':
-            // no break
-        case 'timestamptz':
-            return new Formatter('iso8601');
-        case 'smallint':
-            return new Formatter('numberBetween', [-32768, 32767]);
-        case 'int4':
-            // no break
-        case 'int8':
-            return new Formatter('randomNumber');
-        case 'float4':
-            // no break
-        case 'float8':
-        case 'numeric':
-            return new Formatter('randomFloat');
-        case 'inet':
-            return new Formatter('ipv4');
-        default:
-            return new Formatter($type);
-        }
-    }
-
-    /**
-     * checkField
+     * checkDefinition
      *
      * Throw an exception if the field does not exist.
      *
@@ -184,7 +157,7 @@ class RowDefinition
      * @throws FakerException
      * @return RowDefinition    $this
      */
-    private function checkField($name)
+    private function checkDefinition($name)
     {
         if ($this->definitionExists($name)) {
             return $this;
@@ -192,7 +165,31 @@ class RowDefinition
 
         throw new PommFakerException(
             sprintf(
-                "No such field '%s'.",
+                "No definition for '%s'.",
+                $name
+            )
+        );
+    }
+
+    /**
+     * checkField
+     *
+     * Throw an exception id the field does not exist.
+     *
+     * @access private
+     * @param  string           $name
+     * @throws FakerException
+     * @return RowDefinition    $this
+     */
+    private function checkField($name)
+    {
+        if (isset($this->types[$name])) {
+            return $this;
+        }
+
+        throw new PommFakerException(
+            sprintf(
+                "No field for '%s'.",
                 $name
             )
         );

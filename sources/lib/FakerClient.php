@@ -111,10 +111,12 @@ class FakerClient extends Client
         for ($i = 0; $i < $count; $i++) {
             $row = [];
 
-            foreach ($this->row_definition->getDefinition() as $name => $formatter) {
-                $row[$name] = $this->generator->format(
-                    $formatter->formatter, $formatter->options
-                );
+            foreach ($this->row_definition->getDefinition() as $name => $definition) {
+                if (is_callable($definition)) {
+                    $row[$name] = call_user_func($definition, $this->generator);
+                } else {
+                    $row[$name] = $definition;
+                }
             }
 
             $results[] = $row;
@@ -140,8 +142,10 @@ class FakerClient extends Client
                 ':relation' => sprintf("%s.%s", $this->schema, $this->table),
                 ':fields'   => join(', ', array_keys($this->row_definition->getDefinition())),
                 ':types'   => join(', ',
-                    array_map(function($val) { return sprintf("\$*::%s", $val); }, $this->row_definition->getTypes())
-                ),
+                array_map(
+                    function($val) { return sprintf("\$*::%s", $val); },
+                    array_intersect_key($this->row_definition->getTypes(), $this->row_definition->getDefinition())
+                )),
             ]
         );
 
@@ -152,7 +156,7 @@ class FakerClient extends Client
         $rows = [];
 
         foreach ($this->generate($count) as $row) {
-            $rows[] = $manager->query($sql, $row)->get(0);
+            $rows[] = $manager->query($sql, array_values($row))->get(0);
         }
 
         return $rows;
