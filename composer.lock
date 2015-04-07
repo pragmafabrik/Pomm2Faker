@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93753b2a1a1041711495419ca0aa6ef3",
+    "hash": "070c3326aae2b938a41019f873efee29",
     "packages": [
         {
             "name": "fzaninotto/faker",
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pomm-project/Foundation.git",
-                "reference": "e651bc7495af9617dab5a7b1733bcd5cabdf4a6e"
+                "reference": "a4c4dc6c5a5135e94088d9c295a9adb6b868e82f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pomm-project/Foundation/zipball/e651bc7495af9617dab5a7b1733bcd5cabdf4a6e",
-                "reference": "e651bc7495af9617dab5a7b1733bcd5cabdf4a6e",
+                "url": "https://api.github.com/repos/pomm-project/Foundation/zipball/a4c4dc6c5a5135e94088d9c295a9adb6b868e82f",
+                "reference": "a4c4dc6c5a5135e94088d9c295a9adb6b868e82f",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "pomm",
                 "postgresql"
             ],
-            "time": "2015-04-01 14:06:06"
+            "time": "2015-04-07 08:03:46"
         },
         {
             "name": "psr/log",

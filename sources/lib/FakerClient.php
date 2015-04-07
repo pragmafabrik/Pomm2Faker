@@ -1,16 +1,17 @@
 <?php
 /*
- * This file is part of the PommProject/Faker package.
+ * This file is part of the PragmaFabrik/Pomm/Faker package.
  *
- * (c) 2014 Grégoire HUBERT <hubert.greg@gmail.com>
+ * (c) 2014 - 2015 Grégoire HUBERT <hubert.greg@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PommProject\Faker;
+namespace PragmaFabrik\Pomm\Faker;
 
-use PommProject\Faker\RowDefinition;
-use PommProject\Faker\Exception\FakerException as PommFakerException;
+use PragmaFabrik\Pomm\Faker\RowDefinition;
+use PragmaFabrik\Pomm\Faker\Exception\FakerException as PommFakerException;
+
 use PommProject\Foundation\Client\Client;
 use PommProject\Foundation\ResultIterator;
 use PommProject\Foundation\Session\Session;
@@ -23,11 +24,9 @@ use Faker\Generator;
  * Pomm2 client for Faker.
  *
  * @package Faker
- * @copyright 2014 Grégoire HUBERT
+ * @copyright 2014 - 2015 Grégoire HUBERT
  * @author Grégoire HUBERT
  * @license X11 {@link http://opensource.org/licenses/mit-license.php}
- *
- *
  * @see Client
  */
 class FakerClient extends Client

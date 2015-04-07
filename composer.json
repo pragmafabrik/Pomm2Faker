@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PommProject\\Faker\\": "sources/lib"
+            "PragmaFabrik\\Pomm\\Faker\\": "sources/lib"
         }
     }
 }
