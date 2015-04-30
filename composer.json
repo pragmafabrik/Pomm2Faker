@@ -1,5 +1,5 @@
 {
-    "name": "pomm-project/faker",
+    "name": "pragmafabrik/pomm-faker",
     "type": "library",
     "description":  "Faker API for Pomm2",
     "keywords": ["framework", "postgresql", "database"],
