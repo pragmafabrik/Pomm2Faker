@@ -12,12 +12,13 @@ Using the Client is fairly easy:
 <?php
 
 use PommProject\Foundation\Pomm;
-use PommProject\Faker\FakerPooler;
+
+use PragmaFabrik\Pomm\Faker\FakerPooler;
 
 use Faker\Factory as FakerFactory;
 
 $loader  = require __DIR__.'/vendor/autoload.php';
-$pomm    = new Pomm(['my_db' => ['dsn' => 'pgsql://greg/greg']]);
+$pomm    = new Pomm(['my_db' => ['dsn' => 'pgsql://user:pass@host:port/db_name']]);
 // register Faker Pool Manager to the session
 $session = $pomm['my_db']
     ->registerClientPooler(new FakerPooler(FakerFactory::create()))
@@ -45,8 +46,7 @@ $session->getFaker('student')->getRowDefinition()
     ->unsetDefinition('created_at')
     ;
 
-// Populate the database with 10 students and return the converted values
-// even the ones set by the database DEFAULT statement.
+// Populate the database with 10 students and return the rows converted values.
 $students = $session->getFaker('student')->save(10);
 ```
 

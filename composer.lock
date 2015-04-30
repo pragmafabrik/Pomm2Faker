@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "6b1d646e38fad6dcd3191d69c40918fd7aeaa2f8"
+                "reference": "1dc7404280b32ee661ea65606efcf792be6fc4ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/6b1d646e38fad6dcd3191d69c40918fd7aeaa2f8",
-                "reference": "6b1d646e38fad6dcd3191d69c40918fd7aeaa2f8",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/1dc7404280b32ee661ea65606efcf792be6fc4ca",
+                "reference": "1dc7404280b32ee661ea65606efcf792be6fc4ca",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2015-03-30 08:56:14"
+            "time": "2015-04-27 20:30:06"
         },
         {
             "name": "pomm-project/foundation",
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pomm-project/Foundation.git",
-                "reference": "a4c4dc6c5a5135e94088d9c295a9adb6b868e82f"
+                "reference": "9acffd6498ddb67a7a5dd8442b0ad7026e4f3cc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pomm-project/Foundation/zipball/a4c4dc6c5a5135e94088d9c295a9adb6b868e82f",
-                "reference": "a4c4dc6c5a5135e94088d9c295a9adb6b868e82f",
+                "url": "https://api.github.com/repos/pomm-project/Foundation/zipball/9acffd6498ddb67a7a5dd8442b0ad7026e4f3cc0",
+                "reference": "9acffd6498ddb67a7a5dd8442b0ad7026e4f3cc0",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "pomm",
                 "postgresql"
             ],
-            "time": "2015-04-07 08:03:46"
+            "time": "2015-04-28 19:58:30"
         },
         {
             "name": "psr/log",
