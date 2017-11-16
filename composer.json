@@ -7,7 +7,7 @@
     "license":  "MIT",
     "authors":  [ { "name": "Grégoire HUBERT", "email": "hubert.greg@gmail.com", "homepage": "http://www.coolkeums.org" } ],
     "require": {
-        "pomm-project/foundation": "2.0.*@dev",
+        "pomm-project/foundation": "2.*@dev",
         "fzaninotto/faker": "~1.4"
     },
     "require-dev": {
